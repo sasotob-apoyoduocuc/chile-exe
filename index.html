@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>CHILE.EXE</title>
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style.css"/>
 </head>
 <body>
 
@@ -15,9 +15,10 @@
       <div>🧠 <span id="cordura">100</span></div>
       <div>🍔 <span id="hambre">20</span></div>
       <div>🌡 <span id="temperatura">18</span>°</div>
+      <div>💸 <span id="plata">50</span></div>
     </div>
 
-    <div id="phase">
+    <div id="day-phase">
       LUNES — MAÑANA
     </div>
 
@@ -27,14 +28,18 @@
         🚇
       </div>
 
+      <div id="event-context">
+        Llevas 40 minutos esperando.
+      </div>
+
       <div id="event-text">
         LA MICRO NO PARÓ.
       </div>
 
       <div id="choices">
-        <button onclick="choose(0)">CORRER DETRÁS</button>
-        <button onclick="choose(1)">INSULTAR AL CHOFER</button>
-        <button onclick="choose(2)">LLORAR</button>
+        <button onclick="choose(0)">...</button>
+        <button onclick="choose(1)">...</button>
+        <button onclick="choose(2)">...</button>
       </div>
 
     </div>
@@ -44,5 +49,6 @@
   </div>
 
   <script src="script.js"></script>
+
 </body>
 </html>
