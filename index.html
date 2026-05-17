@@ -8,43 +8,33 @@
 </head>
 <body>
 
-  <div id=\"game\">
+  <div id="game">
 
-    <div id=\"topbar\">
-      <div>🇨🇱 <span id=\"chileno\">50</span></div>
-      <div>🧠 <span id=\"cordura\">100</span></div>
-      <div>🍔 <span id=\"hambre\">20</span></div>
-      <div>🌡 <span id=\"temperatura\">18</span>°</div>
-      <div>💸 <span id=\"plata\">50</span></div>
+    <div id="topbar">
+      <div>🇨🇱 <span id="chileno">50</span></div>
+      <div>🧠 <span id="cordura">100</span></div>
+      <div>🍔 <span id="hambre">20</span></div>
+      <div>🌡 <span id="temperatura">18</span>°</div>
+      <div>💸 <span id="plata">50</span></div>
     </div>
 
-    <div id=\"day-phase\">
-      LUNES — MAÑANA
+    <div id="day-phase">LUNES — MAÑANA</div>
+
+    <div id="event-card">
+      <div id="event-image">🚇</div>
+      <div id="event-context">Cargando contexto...</div>
+      <div id="event-text">Cargando evento...</div>
+      <div id="choices"></div>
     </div>
 
-    <div id=\"event-card\">
-
-      <div id=\"event-image\">
-        🚇
-      </div>
-
-      <div id=\"event-context\">
-        Cargando contexto...
-      </div>
-
-      <div id=\"event-text\">
-        Cargando evento...
-      </div>
-
-      <div id=\"choices\">
-        </div>
-
-    </div>
-
-    <div id=\"effect-text\"></div>
+    <div id="effect-text"></div>
 
   </div>
 
+  <script src="events/events-morning.js"></script>
+  <script src="events/events-midday.js"></script>
+  <script src="events/events-afternoon.js"></script>
+  <script src="events/events-night.js"></script>
   <script src="script.js"></script>
 
 </body>
