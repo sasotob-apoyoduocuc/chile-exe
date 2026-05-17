@@ -1,182 +1,413 @@
+/* ── FUENTES ──────────────────────────────────────────────────── */
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+/* ── VARIABLES ────────────────────────────────────────────────── */
 :root {
-  --bg-cursed: #00ff00;
-  --comic-yellow: #ffff00;
-  --blood-red: #ff0000;
-  --ms-paint-blue: #0000ff;
-  --panel-bg: #1a1a1a;
-  --flash-border: 5px solid #000000;
-  --retro-shadow: 8px 8px 0px #000000;
+  --xp-blue:       #1a5fac;
+  --xp-blue-dark:  #0d3b7a;
+  --xp-green:      #2d7a1f;
+  --xp-silver:     #d4d0c8;
+  --xp-silver-dk:  #a0a0a0;
+  --xp-white:      #ffffff;
+  --flash-red:     #ff0000;
+  --flash-yellow:  #ffff00;
+  --flash-black:   #000000;
+  --comic-stroke:  2px solid #000;
+  --xp-shadow:     inset -1px -1px 0 #808080, inset 1px 1px 0 #fff;
+  --xp-border:     inset -2px -2px 0 #404040, inset 2px 2px 0 #dfdfdf;
 }
 
+/* ── RESET ────────────────────────────────────────────────────── */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+/* ── BODY ─────────────────────────────────────────────────────── */
 body {
   margin: 0;
-  background-color: #111111;
-  background-image: radial-gradient(#222222 20%, transparent 20%), radial-gradient(#333333 20%, transparent 20%);
-  background-size: 8px 8px;
-  background-position: 0 0, 4px 4px;
+  background: #008080; /* Verde classic Windows */
+  background-image:
+    radial-gradient(circle at 20% 50%, #006666 0%, transparent 50%),
+    radial-gradient(circle at 80% 20%, #004444 0%, transparent 40%);
   color: #ffffff;
-  font-family: 'Impact', 'Arial Black', sans-serif;
+  font-family: 'Trebuchet MS', 'Arial', sans-serif;
   overflow: hidden;
   height: 100vh;
+  /* Cursor personalizado flash */
+  cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20'%3E%3Cpolygon points='0,0 0,14 4,10 7,16 9,15 6,9 11,9' fill='white' stroke='black' stroke-width='1'/%3E%3C/svg%3E") 0 0, default;
 }
 
+/* ── GAME CONTAINER ───────────────────────────────────────────── */
 #game {
   height: 100vh;
   display: flex;
   flex-direction: column;
-  padding: 12px;
+  padding: 8px;
   box-sizing: border-box;
   max-width: 420px;
   margin: 0 auto;
-  justify-content: space-between;
+  gap: 6px;
+  position: relative;
+  overflow: hidden;
+  /* Ventana XP */
+  border: 3px solid;
+  border-color: #dfdfdf #404040 #404040 #dfdfdf;
+  background: #ece9d8; /* Fondo XP luna */
 }
 
+/* Barra de título XP */
+#game::before {
+  content: 'CHILE.EXE';
+  display: block;
+  background: linear-gradient(180deg, #1a5fac 0%, #3a8ae8 50%, #1a5fac 100%);
+  color: white;
+  font-family: 'Trebuchet MS', sans-serif;
+  font-size: 12px;
+  font-weight: bold;
+  padding: 3px 6px;
+  letter-spacing: 0.5px;
+  text-shadow: 1px 1px 0 #0d3b7a;
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  z-index: 100;
+  height: 22px;
+  line-height: 16px;
+}
+
+/* ── FONDOS DE ESCENA ─────────────────────────────────────────── */
+/* Se aplican al #event-card */
+
+.bg-paradero #event-card {
+  background:
+    linear-gradient(180deg, #1a1a2e 0%, #16213e 40%, #555 60%, #444 100%);
+}
+.bg-metro #event-card {
+  background:
+    linear-gradient(180deg, #0d0d0d 0%, #1a0a0a 40%, #cc0000 50%, #880000 60%, #333 100%);
+}
+.bg-oficina #event-card {
+  background:
+    linear-gradient(180deg, #e8e8e8 0%, #d0d0d0 30%, #b8b8b8 60%, #c0c0c0 100%);
+}
+.bg-calle #event-card {
+  background:
+    linear-gradient(180deg, #87CEEB 0%, #87CEEB 40%, #888 55%, #666 100%);
+}
+.bg-casino #event-card {
+  background:
+    linear-gradient(180deg, #d4e8d4 0%, #aaccaa 30%, #888 70%, #666 100%);
+}
+.bg-pieza #event-card {
+  background:
+    linear-gradient(180deg, #0a0a0a 0%, #1a1010 50%, #2a1a1a 100%);
+}
+.bg-noche #event-card {
+  background:
+    linear-gradient(180deg, #000011 0%, #000033 40%, #111 70%, #222 100%);
+}
+.bg-cursed-scene #event-card {
+  background:
+    linear-gradient(180deg, #001100 0%, #00ff00 20%, #ff00ff 40%, #0000ff 60%, #ff0000 80%, #000 100%);
+  animation: bg-cursed-flash 0.8s steps(3) infinite;
+}
+@keyframes bg-cursed-flash {
+  0%   { filter: hue-rotate(0deg) saturate(3); }
+  33%  { filter: hue-rotate(120deg) saturate(5); }
+  66%  { filter: hue-rotate(240deg) saturate(3); }
+  100% { filter: hue-rotate(360deg) saturate(3); }
+}
+.bg-default #event-card {
+  background: #1a1a1a;
+}
+
+/* Texto oscuro para fondos claros (oficina, calle, casino) */
+.bg-oficina #event-context,
+.bg-calle #event-context,
+.bg-casino #event-context {
+  background: rgba(0,0,0,0.7);
+  color: #00ff00;
+}
+.bg-oficina #event-text,
+.bg-calle #event-text,
+.bg-casino #event-text {
+  color: #000;
+  -webkit-text-stroke: 2px #fff;
+  text-shadow: 3px 3px 0 #cc0000;
+}
+
+/* ── TOPBAR — ESTILO BARRA DE ESTADO XP ───────────────────────── */
 #topbar {
   display: grid;
   grid-template-columns: repeat(5, 1fr);
-  gap: 4px;
-  margin-bottom: 10px;
+  gap: 3px;
+  margin-top: 24px; /* espacio para la barra de título */
+  flex-shrink: 0;
 }
 
 #topbar div {
-  background: #000000;
-  border: 3px solid var(--comic-yellow);
-  padding: 6px 2px;
-  font-size: 12px;
+  background: linear-gradient(180deg, #e8e4d8 0%, #d4d0c4 100%);
+  border: var(--xp-border);
+  padding: 4px 2px;
+  font-family: 'Trebuchet MS', sans-serif;
+  font-size: 10px;
+  font-weight: bold;
   text-align: center;
-  text-transform: uppercase;
-  color: #ffffff;
-  box-shadow: 2px 2px 0px #000000;
+  color: #000;
+  box-shadow: 1px 1px 0 #fff;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 #topbar div:first-child {
-  border-color: var(--blood-red);
-  animation: alert-chileno 0.5s steps(2) infinite;
+  background: linear-gradient(180deg, #cc3300 0%, #aa2200 100%);
+  color: #fff;
+  border-color: #ff6644 #660000 #660000 #ff6644;
+  animation: alert-chileno 0.8s steps(2) infinite;
 }
 
+@keyframes alert-chileno {
+  0%   { background: linear-gradient(180deg, #cc3300, #aa2200); }
+  100% { background: linear-gradient(180deg, #ff6600, #cc3300); }
+}
+
+/* ── ADVERTENCIA TARJETA ──────────────────────────────────────── */
+#card-warning {
+  background: linear-gradient(90deg, #cc0000, #880000);
+  color: #ffff00;
+  font-family: 'Press Start 2P', monospace;
+  font-size: 7px;
+  text-align: center;
+  padding: 4px;
+  border: 2px solid #ff4444;
+  animation: card-blink 0.5s steps(2) infinite;
+  flex-shrink: 0;
+}
+
+@keyframes card-blink {
+  0%   { opacity: 1; }
+  100% { opacity: 0.5; }
+}
+
+/* ── DAY PHASE ────────────────────────────────────────────────── */
 #day-phase {
   text-align: center;
-  font-size: 24px;
-  font-weight: 900;
-  color: var(--comic-yellow);
-  -webkit-text-stroke: 1.5px #000000;
-  text-shadow: 4px 4px 0px #000000;
+  font-family: 'Press Start 2P', monospace;
+  font-size: 11px;
+  color: #000080;
+  background: linear-gradient(180deg, #ece9d8, #d4d0c8);
+  border: var(--xp-border);
+  padding: 5px;
   letter-spacing: 1px;
-  transform: rotate(-1deg);
-  margin-bottom: 10px;
+  flex-shrink: 0;
+  text-shadow: 1px 1px 0 #fff;
 }
 
+/* ── EVENT CARD ───────────────────────────────────────────────── */
 #event-card {
   flex: 1;
-  background: var(--panel-bg);
-  border: var(--flash-border);
-  border-radius: 4px;
-  padding: 16px;
+  border: 3px solid;
+  border-color: #dfdfdf #404040 #404040 #dfdfdf;
+  border-radius: 0;
+  padding: 12px;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  gap: 12px;
+  gap: 10px;
   text-align: center;
-  box-shadow: var(--retro-shadow);
   position: relative;
+  overflow: hidden;
+  transition: background 0.3s;
 }
 
+/* Esquinas decorativas estilo Flash */
+#event-card::before,
+#event-card::after {
+  content: '★';
+  position: absolute;
+  font-size: 18px;
+  color: rgba(255,255,0,0.3);
+}
+#event-card::before { top: 6px; left: 6px; }
+#event-card::after  { top: 6px; right: 6px; }
+
+/* ── EMOJI ────────────────────────────────────────────────────── */
 #event-image {
-  font-size: 85px;
-  margin: 5px 0;
-  animation: flash-bounce 0.4s steps(2) infinite;
+  font-size: 72px;
+  line-height: 1;
+  animation: flash-bounce 0.5s steps(2) infinite;
+  filter: drop-shadow(0 4px 0 rgba(0,0,0,0.8));
 }
 
+@keyframes flash-bounce {
+  0%,100% { transform: translateY(0) scale(1) rotate(-1deg); }
+  50%      { transform: translateY(-8px) scale(1.08) rotate(2deg); }
+}
+
+/* ── CONTEXTO ─────────────────────────────────────────────────── */
 #event-context {
-  font-size: 15px;
   font-family: 'Courier New', monospace;
-  background: #000000;
+  font-size: 12px;
+  background: #000;
   color: #00ff00;
-  padding: 6px;
-  border: 2px solid #333333;
-  width: 90%;
-  box-sizing: border-box;
+  padding: 6px 10px;
+  border: 2px solid #00aa00;
+  width: 95%;
+  line-height: 1.4;
+  box-shadow: inset 0 0 8px rgba(0,255,0,0.2);
 }
 
+/* ── TEXTO EVENTO ─────────────────────────────────────────────── */
 #event-text {
-  font-size: 26px;
+  font-family: Impact, 'Arial Black', sans-serif;
+  font-size: 24px;
   font-weight: 900;
   color: #ffffff;
   -webkit-text-stroke: 2px #000000;
-  text-shadow: 3px 3px 0px var(--blood-red);
+  text-shadow: 3px 3px 0 #cc0000, 5px 5px 0 rgba(0,0,0,0.5);
   text-transform: uppercase;
   word-wrap: break-word;
+  line-height: 1.1;
 }
 
+/* ── CHOICES — BOTONES ESTILO XP ──────────────────────────────── */
 #choices {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 6px;
   width: 100%;
 }
 
 #choices button {
-  background-color: #ffffff;
-  border: var(--flash-border);
-  color: #000000;
-  padding: 12px 10px;
-  font-family: 'Impact', sans-serif;
-  font-size: 16px;
+  background: linear-gradient(180deg, #ece9d8 0%, #d4d0c8 45%, #c0bcb0 100%);
+  border: 2px solid;
+  border-color: #dfdfdf #404040 #404040 #dfdfdf;
+  color: #000080;
+  padding: 10px 10px;
+  font-family: 'Trebuchet MS', 'Arial', sans-serif;
+  font-size: 13px;
+  font-weight: bold;
   cursor: pointer;
   width: 100%;
-  box-sizing: border-box;
   text-transform: uppercase;
-  box-shadow: 5px 5px 0px #000000;
+  text-align: left;
   position: relative;
+  transition: all 0.05s;
+  letter-spacing: 0.5px;
+}
+
+#choices button::before {
+  content: '▶ ';
+  color: #cc0000;
+  font-size: 10px;
 }
 
 #choices button:hover {
-  background-color: var(--comic-yellow);
-  color: #000000;
-  transform: translate(-2px, -2px);
-  box-shadow: 7px 7px 0px #000000;
+  background: linear-gradient(180deg, #316ac5 0%, #1a5fac 100%);
+  color: #ffffff;
+  border-color: #6a9ed8 #0d3b7a #0d3b7a #6a9ed8;
 }
+
+#choices button:hover::before { color: #ffff00; }
 
 #choices button:active {
-  transform: translate(5px, 5px);
-  box-shadow: 0px 0px 0px #000000;
+  border-color: #404040 #dfdfdf #dfdfdf #404040;
+  background: linear-gradient(180deg, #b0acac 0%, #c8c4bc 100%);
+  transform: translate(1px, 1px);
 }
 
+/* ── EFFECT TEXT ──────────────────────────────────────────────── */
 #effect-text {
   text-align: center;
-  font-size: 18px;
+  font-family: Impact, sans-serif;
+  font-size: 16px;
   font-weight: 900;
   color: #ff00ff;
-  -webkit-text-stroke: 1px #000000;
-  min-height: 24px;
-  margin-top: 5px;
+  -webkit-text-stroke: 1px #000;
+  min-height: 22px;
+  background: rgba(0,0,0,0.7);
+  padding: 4px 8px;
+  border: 2px solid #ff00ff;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  flex-shrink: 0;
+  word-break: break-word;
 }
 
-@keyframes flash-bounce {
-  0%, 100% { transform: translateY(0) scale(1); }
-  50% { transform: translateY(-8px) scale(1.05) rotate(3deg); }
+/* ── OVERLAY PANTALLAS ────────────────────────────────────────── */
+.screen-overlay {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 16px;
+  width: 100%;
 }
 
-@keyframes alert-chileno {
-  0% { background-color: #000000; }
-  100% { background-color: var(--blood-red); }
+.overlay-emoji {
+  font-size: 64px;
+  animation: flash-bounce 0.4s steps(2) infinite;
 }
 
-.shake {
-  animation: brainrot-shake 0.15s linear infinite;
+.overlay-title {
+  font-family: Impact, sans-serif;
+  font-size: 32px;
+  font-weight: 900;
+  -webkit-text-stroke: 2px #000;
+  text-shadow: 4px 4px 0 rgba(0,0,0,0.5);
+  text-transform: uppercase;
 }
+
+.overlay-body {
+  font-family: 'Courier New', monospace;
+  font-size: 12px;
+  color: #00ff00;
+  background: #000;
+  padding: 12px;
+  border: 2px solid #00aa00;
+  line-height: 1.8;
+  text-align: center;
+  width: 95%;
+}
+
+.overlay-btn {
+  background: linear-gradient(180deg, #ece9d8 0%, #d4d0c8 100%);
+  border: 3px solid;
+  border-color: #dfdfdf #404040 #404040 #dfdfdf;
+  color: #000080;
+  font-family: Impact, sans-serif;
+  font-size: 20px;
+  font-weight: 900;
+  padding: 12px 28px;
+  cursor: pointer;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.overlay-btn:hover {
+  background: linear-gradient(180deg, #316ac5, #1a5fac);
+  color: #fff;
+  border-color: #6a9ed8 #0d3b7a #0d3b7a #6a9ed8;
+}
+
+.overlay-btn:active {
+  transform: translate(2px, 2px);
+  border-color: #404040 #dfdfdf #dfdfdf #404040;
+}
+
+/* ── ANIMACIONES FLASH ────────────────────────────────────────── */
+.shake { animation: brainrot-shake 0.15s linear infinite; }
 
 @keyframes brainrot-shake {
-  0% { transform: translate(3px, 1px) rotate(1deg); }
-  25% { transform: translate(-1px, -2px) rotate(-1deg); }
-  50% { transform: translate(-3px, 0px) rotate(2deg); }
-  75% { transform: translate(1px, 2px) rotate(-2deg); }
+  0%   { transform: translate(3px, 1px) rotate(1deg); }
+  25%  { transform: translate(-1px, -2px) rotate(-1deg); }
+  50%  { transform: translate(-3px, 0px) rotate(2deg); }
+  75%  { transform: translate(1px, 2px) rotate(-2deg); }
   100% { transform: translate(3px, 1px) rotate(1deg); }
 }
 
+/* ── EFECTOS DE CORDURA ───────────────────────────────────────── */
 .distorted-low {
-  filter: contrast(1.8) saturate(2);
+  filter: contrast(1.6) saturate(1.8);
 }
 
 .distorted-high {
@@ -185,16 +416,23 @@ body {
 }
 
 @keyframes screen-glitch {
-  0% { transform: skewX(-5deg); }
-  100% { transform: skewX(5deg); }
+  0%   { transform: skewX(-4deg); }
+  100% { transform: skewX(4deg); }
 }
 
 .glitch-card {
-  background-color: var(--bg-cursed) !important;
   animation: break-panel 0.2s steps(2) infinite;
 }
 
 @keyframes break-panel {
-  0% { border-color: var(--blood-red); }
-  100% { border-color: var(--ms-paint-blue); }
+  0%   { border-color: #ff0000 #0000ff #0000ff #ff0000; }
+  100% { border-color: #00ff00 #ff00ff #ff00ff #00ff00; }
+}
+
+/* ── XP SCROLLBAR ─────────────────────────────────────────────── */
+::-webkit-scrollbar { width: 16px; }
+::-webkit-scrollbar-track { background: #d4d0c8; border: 1px solid #a0a0a0; }
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(90deg, #e8e4dc, #c0bcb4);
+  border: 2px solid; border-color: #fff #808080 #808080 #fff;
 }
