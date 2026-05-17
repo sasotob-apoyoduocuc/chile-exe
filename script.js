@@ -1,3 +1,112 @@
+// ── EVENTOS FIJOS DE INICIO DE DÍA ────────────────────────────
+const dayStartEvents = {
+  0: { // LUNES — atrasado
+    emoji: "😵", background: "paradero",
+    context: "Son las 7:58 AM. El bus sale a las 8:00.",
+    text: "PRIMER DÍA. LLEGAS TARDE DE UNA.",
+    choices: [
+      { text: "SALIR CORRIENDO SIN DESAYUNAR", effect: "¡MODO BERSERKER ACTIVADO!", stats: { hambre: 15, cordura: -5, temperatura: 8 } },
+      { text: "DESAYUNAR Y ASUMIR EL ATRASO",  effect: "Igual vas a llegar tarde po.",            stats: { hambre: -20, cordura: -10 } },
+      { text: "INVENTAR QUE HAY TACO",          effect: "Funciona el 40% del tiempo.",             stats: { chileno: 20, cordura: -5 } }
+    ]
+  },
+  1: { // MARTES — atrasado
+    emoji: "💀", background: "pieza",
+    context: "Dormiste 4 horas. El cuerpo rechaza la realidad.",
+    text: "MARTES. EL DÍA MÁS LARGO DE LA SEMANA.",
+    choices: [
+      { text: "DUCHA DE 30 SEGUNDOS",               effect: "¿Quedé limpio? No lo sé.",          stats: { cordura: 5, temperatura: -5 } },
+      { text: "SOLO DESODORANTE Y CORRER",           effect: "+15 Chilenidad. -15 Dignidad.",     stats: { chileno: 15, hambre: 10 } },
+      { text: "HACER COMO QUE TRABAJO DESDE CASA",  effect: "La VPN no responde.",               stats: { cordura: -20 } }
+    ]
+  },
+  2: { // MIÉRCOLES — con tiempo
+    emoji: "😌", background: "pieza",
+    context: "Miércoles. Hay tiempo. Esto no va a durar.",
+    text: "PUEDES DESAYUNAR. ¿QUÉ COMES?",
+    choices: [
+      { text: "MARRAQUETA CON PALTA",         effect: "Empezaste bien. Disfrutalo.",           stats: { hambre: -30, cordura: 15 } },
+      { text: "NESCAFÉ Y UN SUPER 8",         effect: "El desayuno del campeón nacional.",     stats: { hambre: -10, cordura: 5, plata: -1 } },
+      { text: "NADA, SE ME ACABA EL TIEMPO",  effect: "Chilenidad: activada.",                 stats: { hambre: 20, chileno: 10 } }
+    ]
+  },
+  3: { // JUEVES — con tiempo
+    emoji: "🫠", background: "pieza",
+    context: "Jueves. Ya casi. El cuerpo lo sabe.",
+    text: "¿TE DUCHAS O LLEGAS PUNTUAL?",
+    choices: [
+      { text: "DUCHA COMPLETA (LLEGO TARDE)",   effect: "Sacrificio por higiene.",              stats: { cordura: 10, temperatura: -5, hambre: 5 } },
+      { text: "DUCHA RÁPIDA Y CORRER",          effect: "Dejaste el shampoo puesto.",           stats: { cordura: 5, temperatura: -3 } },
+      { text: "SALGO EN PIJAMA DEBAJO",         effect: "Nadie lo sabrá jamás.",                stats: { chileno: 20, cordura: -5 } }
+    ]
+  },
+  4: { // VIERNES — atrasado
+    emoji: "🔥", background: "paradero",
+    context: "Viernes. La luz al final del túnel.",
+    text: "PERO IGUAL LLEGAS TARDE. ES CHILE.",
+    choices: [
+      { text: "CORRER AL METRO CON TODO",            effect: "¡ES VIERNES CONCHETUMARE!",        stats: { chileno: 25, cordura: -5, temperatura: 10 } },
+      { text: "CAMINAR TRANQUILO TOTAL",             effect: "Nadie trabaja en viernes igual.",   stats: { cordura: 15, hambre: 5 } },
+      { text: "MANDAR AUDIO DE 4 MIN AL JEFE",       effect: "El jefe no lo escucha hasta lunes.",stats: { chileno: 30, cordura: 5 } }
+    ]
+  }
+};
+
+// ── CHILENIDAD ESPECIAL ────────────────────────────────────────
+const CHILENIDAD_MAX_NORMAL   = 100;
+const CHILENIDAD_MAX_ESPECIAL = 112;
+
+const eventosEspecialesChilenidad = [
+  "m8_audifonos_fallan",
+  "md27_reunion_eterna",
+  "md33_temblor_oficina",
+  "n79_temblor_fuerte",
+  "t53_doctor_simi",
+  "n86_cursed_fantasma_pega",
+  "n94_fono_fantasma",
+  "n98_vecino_extraterrestre",
+  "m4_paradero_pelea",
+  "md30_completo_italiano"
+];
+
+// ── SISTEMA DE PLATA ───────────────────────────────────────────
+let efectivo      = 15000;
+let deudaTarjeta  = 0;
+let usandoTarjeta = false;
+
+function formatPlata(n) {
+  return "$" + Math.abs(n).toLocaleString("es-CL");
+}
+
+function gastarPlata(monto) {
+  const montoReal = monto * 1000;
+  if (efectivo >= montoReal) {
+    efectivo -= montoReal;
+    if (efectivo === 0) usandoTarjeta = true;
+  } else {
+    const resto = montoReal - efectivo;
+    efectivo = 0;
+    deudaTarjeta += Math.round(resto * 1.3); // 30% interés
+    usandoTarjeta = true;
+  }
+}
+
+function ganarPlata(monto) {
+  const montoReal = monto * 1000;
+  if (deudaTarjeta > 0) {
+    if (montoReal >= deudaTarjeta) {
+      efectivo += (montoReal - deudaTarjeta);
+      deudaTarjeta = 0;
+      usandoTarjeta = false;
+    } else {
+      deudaTarjeta -= montoReal;
+    }
+  } else {
+    efectivo += montoReal;
+  }
+}
+
+// ── DATOS ─────────────────────────────────────────────────────
 const eventsData = {
   morning:   morningEvents,
   midday:    middayEvents,
@@ -7,13 +116,59 @@ const eventsData = {
 
 const days   = ["LUNES","MARTES","MIÉRCOLES","JUEVES","VIERNES"];
 const phases = [
-  { id: "morning",   name: "MAÑANA"   },
-  { id: "midday",    name: "MEDIODÍA"  },
-  { id: "afternoon", name: "TARDE"     },
-  { id: "night",     name: "NOCHE"     }
+  { id:"morning",   name:"MAÑANA"   },
+  { id:"midday",    name:"MEDIODÍA"  },
+  { id:"afternoon", name:"TARDE"     },
+  { id:"night",     name:"NOCHE"     }
 ];
 
-let stats = { chileno:50, cordura:100, hambre:20, temperatura:18, plata:50 };
+const bgClasses = ["bg-paradero","bg-metro","bg-oficina","bg-calle","bg-casino","bg-pieza","bg-noche","bg-cursed-scene","bg-default"];
+
+const eventBgMap = {
+  m1_micro_no_paro:"paradero", m2_micro_la_alcanzaste:"paradero",
+  m3_micro_bip_rechazada:"paradero", m4_paradero_pelea:"paradero",
+  m9_trio_andino:"paradero", m13_asiento_reservado:"paradero",
+  m15_super_8:"paradero", t60_paradero_infierno:"paradero", m14_charco_agua:"paradero",
+  m5_bip_no_carga:"metro", m8_audifonos_fallan:"metro",
+  n71_metro_tobalaba:"metro", n72_olor_metro:"metro",
+  m17_conserje_copuchento:"oficina", m18_conserje_secreto:"oficina",
+  m19_desayuno_oficina:"oficina", md26_reunion_sorpresa:"oficina",
+  md27_reunion_eterna:"oficina", md33_temblor_oficina:"oficina",
+  md34_aire_acondicionado:"oficina", md36_licencia_rechazada:"oficina",
+  md37_colacion_robada:"oficina", md39_chilenismo_jefe:"oficina",
+  m6_vendedor_carro:"calle", m10_chaleco_amarillo:"calle",
+  md31_vendedor_carcasa:"calle", md32_el_mimo:"calle",
+  md35_alcancia_bomberos:"calle", md41_pastor_soto:"calle",
+  md42_feria_libre:"calle", t53_doctor_simi:"calle",
+  t54_vendedor_ensalada:"calle", t61_comercio_ambulante:"calle",
+  t63_cuaderno_colon:"calle", t64_marraqueta_fresca:"calle", t62_noticia_impacto:"calle",
+  md28_casino_comida:"casino", md29_colon_guerra:"casino",
+  md30_completo_italiano:"casino", md43_torta_tres_leches:"casino",
+  n73_once_comida:"pieza", n74_vecino_taladro:"pieza",
+  n75_gato_techo:"pieza", n76_doomscrolling:"pieza",
+  n77_alarma_olvidada:"pieza", n80_pan_con_chancho:"pieza",
+  n81_lluvia_techo:"pieza", n82_perro_ladra_nada:"pieza",
+  n83_botilleria_turno:"noche", n84_carro_completos_noche:"noche",
+  n85_uber_caro:"noche",
+  m21_cursed_pudu:"cursed", m22_cursed_micro_fantasma:"cursed",
+  m23_cursed_alarma:"cursed", m24_cursed_Tio_Aceite:"cursed",
+  m25_cursed_Alameda_Infinita:"cursed", md46_cursed_jefe_reptil:"cursed",
+  md47_cursed_completo_flotante:"cursed", md48_cursed_baño_infinito:"cursed",
+  md49_cursed_fotocopiadora:"cursed", md50_cursed_clima_polar:"cursed",
+  t66_cursed_sol_francisco:"cursed", t67_cursed_estatua_viva:"cursed",
+  t68_cursed_palomas_mafia:"cursed", t69_cursed_pandereta:"cursed",
+  t70_cursed_tocomple_vengador:"cursed", n86_cursed_fantasma_pega:"cursed",
+  n87_cursed_chocman_gigante:"cursed", n88_cursed_metro_eterno:"cursed",
+  n89_cursed_tele_estatica:"cursed", n90_cursed_quiltro_habla:"cursed",
+  n91_cuenta_rut_habla:"cursed", n92_temblor_cielo:"cursed",
+  n93_sopaipilla_voladora:"cursed", n94_fono_fantasma:"cursed",
+  n95_gato_humano:"cursed", n96_alameda_agua:"cursed",
+  n97_tostador_habla:"cursed", n98_vecino_extraterrestre:"cursed",
+  n99_espejo_retraso:"cursed", n100_vendedor_alfajor_fantasma:"cursed",
+  n101_indio_picaro_gigante:"cursed"
+};
+
+let stats           = { chileno:50, cordura:100, hambre:20, temperatura:18 };
 let currentDay      = 0;
 let currentPhase    = 0;
 let eventsThisPhase = 0;
@@ -21,30 +176,101 @@ let currentEvent    = null;
 let activeChainId   = null;
 let lastEventId     = null;
 let gameOver        = false;
+let dayStartDone    = false;
+let effectTimeout   = null;
+
+// ── FONDO ─────────────────────────────────────────────────────
+function setBackground(type) {
+  const game = document.getElementById("game");
+  bgClasses.forEach(c => game.classList.remove(c));
+  game.classList.add("bg-" + (type === "cursed" ? "cursed-scene" : type === "default" ? "default" : type));
+}
+
+function setBgForEvent(id) {
+  setBackground(eventBgMap[id] || "default");
+}
+
+// ── STATS ─────────────────────────────────────────────────────
+function applyStats(choice, eventId) {
+  for (const stat in choice.stats) {
+    const val = choice.stats[stat];
+    if (stat === "plata") {
+      if (val < 0) gastarPlata(Math.abs(val));
+      else ganarPlata(val);
+    } else if (stats[stat] !== undefined) {
+      stats[stat] += val;
+      if (stat === "chileno") {
+        const esEspecial = eventosEspecialesChilenidad.includes(eventId);
+        const tope = esEspecial ? CHILENIDAD_MAX_ESPECIAL : CHILENIDAD_MAX_NORMAL;
+        stats[stat] = Math.max(0, Math.min(tope, stats[stat]));
+      } else if (stat === "cordura") {
+        stats[stat] = Math.max(0, Math.min(100, stats[stat]));
+      } else {
+        stats[stat] = Math.max(0, Math.min(100, stats[stat]));
+      }
+    }
+  }
+}
+
+function updateStats() {
+  const chilenoBadge = stats.chileno > 100 ? "🔥" : "";
+  document.getElementById("chileno").innerText     = stats.chileno + chilenoBadge;
+  document.getElementById("cordura").innerText     = stats.cordura;
+  document.getElementById("hambre").innerText      = stats.hambre;
+  document.getElementById("temperatura").innerText = stats.temperatura;
+
+  const plataEl = document.getElementById("plata");
+  if (usandoTarjeta || deudaTarjeta > 0) {
+    plataEl.innerText   = "💳 DEBE";
+    plataEl.style.color = "#ff4444";
+  } else {
+    plataEl.innerText   = formatPlata(efectivo);
+    plataEl.style.color = efectivo < 3000 ? "#ffaa00" : "";
+  }
+
+  const cardWarn = document.getElementById("card-warning");
+  if (cardWarn) {
+    if (deudaTarjeta > 0) {
+      cardWarn.style.display = "block";
+      cardWarn.innerText     = "💳 TARJETA: " + formatPlata(deudaTarjeta) + " (30% interés)";
+    } else {
+      cardWarn.style.display = "none";
+    }
+  }
+}
+
+function applySanityEffects() {
+  const gameDiv   = document.getElementById("game");
+  const eventCard = document.getElementById("event-card");
+  if (!gameDiv || !eventCard) return;
+  gameDiv.classList.remove("distorted-low","distorted-high");
+  eventCard.classList.remove("glitch-card");
+  if (stats.cordura <= 60 && stats.cordura > 30) {
+    gameDiv.classList.add("distorted-low");
+  } else if (stats.cordura <= 30) {
+    gameDiv.classList.add("distorted-high");
+    eventCard.classList.add("glitch-card");
+    if (Math.random() > 0.6) {
+      document.getElementById("day-phase").innerText = "¿DÓNDE ESTOY? ¿AYUDA?";
+    }
+  }
+}
 
 // ── PANTALLAS ─────────────────────────────────────────────────
-
 function showGameOver() {
   gameOver = true;
+  setBackground("cursed");
   document.getElementById("event-card").innerHTML = `
-    <div style="text-align:center;padding:24px;display:flex;flex-direction:column;gap:14px;align-items:center;">
-      <div style="font-size:72px;animation:flash-bounce 0.4s steps(2) infinite">💀</div>
-      <div style="font-size:28px;font-weight:900;color:#ff0000;-webkit-text-stroke:2px #000;text-shadow:3px 3px 0 #660000;text-transform:uppercase;">
-        GAME OVER
+    <div class="screen-overlay">
+      <div class="overlay-emoji">💀</div>
+      <div class="overlay-title" style="color:#ff0000">GAME OVER</div>
+      <div class="overlay-body">
+        La cordura llegó a 0.<br>Te quedaste mirando el techo<br>a las 3am un martes.<br><br>
+        🇨🇱 Chilenidad: <b>${stats.chileno}${stats.chileno > 100 ? " 🔥 ESPECIAL" : ""}</b><br>
+        💸 Efectivo: <b>${formatPlata(efectivo)}</b><br>
+        💳 Deuda: <b>${formatPlata(deudaTarjeta)}</b>
       </div>
-      <div style="font-family:'Courier New',monospace;font-size:13px;color:#00ff00;background:#000;padding:10px;border:2px solid #333;line-height:1.8;">
-        La cordura llegó a 0.<br>
-        Te quedaste mirando el techo<br>
-        a las 3am un martes.<br><br>
-        Chilenidad final: <b>${stats.chileno}</b>
-      </div>
-      <button onclick="restartGame()"
-        style="background:#fff;border:5px solid #000;color:#000;
-               font-family:Impact,sans-serif;font-size:20px;
-               padding:14px 28px;cursor:pointer;
-               box-shadow:5px 5px 0 #000;text-transform:uppercase;">
-        DE NUEVO PO
-      </button>
+      <button class="overlay-btn" onclick="restartGame()">DE NUEVO PO</button>
     </div>`;
   document.getElementById("effect-text").innerText = "";
   document.getElementById("day-phase").innerText   = "CORDURA: MUERTA";
@@ -52,43 +278,41 @@ function showGameOver() {
 
 function showWin() {
   gameOver = true;
+  setBackground("default");
   document.getElementById("event-card").innerHTML = `
-    <div style="text-align:center;padding:24px;display:flex;flex-direction:column;gap:14px;align-items:center;">
-      <div style="font-size:64px;animation:flash-bounce 0.4s steps(2) infinite">🇨🇱🏆</div>
-      <div style="font-size:22px;font-weight:900;color:#ffff00;-webkit-text-stroke:2px #000;text-shadow:3px 3px 0 #006600;text-transform:uppercase;">
-        SOBREVIVISTE LA SEMANA
-      </div>
-      <div style="font-family:'Courier New',monospace;font-size:13px;color:#00ff00;background:#000;padding:10px;border:2px solid #333;line-height:1.8;">
+    <div class="screen-overlay">
+      <div class="overlay-emoji">🇨🇱🏆</div>
+      <div class="overlay-title" style="color:#ffff00">SOBREVIVISTE</div>
+      <div class="overlay-body">
         Eres un chileno de acero.<br><br>
-        Chilenidad: <b>${stats.chileno}</b><br>
-        Cordura final: <b>${stats.cordura}</b><br>
-        Plata restante: <b>${stats.plata}</b>
+        🇨🇱 Chilenidad: <b>${stats.chileno}${stats.chileno > 100 ? " 🔥 ÉPICO" : ""}</b><br>
+        🧠 Cordura: <b>${stats.cordura}</b><br>
+        💸 Efectivo: <b>${formatPlata(efectivo)}</b><br>
+        💳 Deuda: <b>${formatPlata(deudaTarjeta)}</b>
       </div>
-      <button onclick="restartGame()"
-        style="background:#fff;border:5px solid #000;color:#000;
-               font-family:Impact,sans-serif;font-size:20px;
-               padding:14px 28px;cursor:pointer;
-               box-shadow:5px 5px 0 #000;text-transform:uppercase;">
-        OTRA VEZ
-      </button>
+      <button class="overlay-btn" onclick="restartGame()">OTRA VEZ</button>
     </div>`;
   document.getElementById("effect-text").innerText = "";
-  document.getElementById("day-phase").innerText   = "SEMANA COMPLETA";
+  document.getElementById("day-phase").innerText   = "SEMANA COMPLETA 🏆";
 }
 
 function restartGame() {
   gameOver        = false;
-  stats           = { chileno:50, cordura:100, hambre:20, temperatura:18, plata:50 };
+  stats           = { chileno:50, cordura:100, hambre:20, temperatura:18 };
+  efectivo        = 15000;
+  deudaTarjeta    = 0;
+  usandoTarjeta   = false;
   currentDay      = 0;
   currentPhase    = 0;
   eventsThisPhase = 0;
   activeChainId   = null;
   lastEventId     = null;
+  dayStartDone    = false;
+  setBackground("default");
   renderEvent();
 }
 
 // ── RANDOM ────────────────────────────────────────────────────
-
 function getRandomEvent() {
   if (activeChainId) {
     let found = null;
@@ -99,154 +323,122 @@ function getRandomEvent() {
     activeChainId = null;
     if (found) return found;
   }
-
   const phaseId = phases[currentPhase].id;
   let pool = eventsData[phaseId].filter(e => !e.isChain);
-
   pool = pool.filter(e => {
     const min = e.minCordura !== undefined ? e.minCordura : 0;
     const max = e.maxCordura !== undefined ? e.maxCordura : 100;
     return stats.cordura >= min && stats.cordura <= max;
   });
-
   if (pool.length > 1 && lastEventId) {
     const noRepeat = pool.filter(e => e.id !== lastEventId);
     if (noRepeat.length > 0) pool = noRepeat;
   }
-
-  if (pool.length === 0) {
-    return eventsData[phaseId].filter(e => !e.isChain)[0];
-  }
-
+  if (pool.length === 0) return eventsData[phaseId].filter(e => !e.isChain)[0];
   return pool[Math.floor(Math.random() * pool.length)];
 }
 
 // ── RENDER ────────────────────────────────────────────────────
+function renderChoices(choices) {
+  const el = document.getElementById("choices");
+  el.innerHTML = "";
+  choices.forEach((choice, i) => {
+    const btn     = document.createElement("button");
+    btn.innerText = choice.text;
+    btn.onclick   = () => choose(i);
+    el.appendChild(btn);
+  });
+}
 
 function renderEvent() {
   if (gameOver) return;
 
-  currentEvent = getRandomEvent();
-  if (!currentEvent) { advancePhase(); renderEvent(); return; }
-
-  if (currentEvent.id === "n102_despertar_lunes") {
-    setTimeout(showWin, 500);
+  // Evento fijo de inicio de día (solo primera fase, primera vez del día)
+  if (!dayStartDone && currentPhase === 0) {
+    dayStartDone = true;
+    const startEv = dayStartEvents[currentDay];
+    currentEvent  = { ...startEv, id: `day_start_${currentDay}` };
+    document.getElementById("day-phase").innerText     = `${days[currentDay]} — ${phases[0].name}`;
+    document.getElementById("event-image").innerText   = startEv.emoji;
+    document.getElementById("event-context").innerText = startEv.context;
+    document.getElementById("event-text").innerText    = startEv.text;
+    setBackground(startEv.background);
+    renderChoices(startEv.choices);
+    updateStats();
+    applySanityEffects();
     return;
   }
 
-  lastEventId = currentEvent.id;
+  currentEvent = getRandomEvent();
+  if (!currentEvent) { advancePhase(); renderEvent(); return; }
+  if (currentEvent.id === "n102_despertar_lunes") { setTimeout(showWin, 500); return; }
 
+  lastEventId = currentEvent.id;
   document.getElementById("day-phase").innerText     = `${days[currentDay]} — ${phases[currentPhase].name}`;
   document.getElementById("event-image").innerText   = currentEvent.emoji;
   document.getElementById("event-context").innerText = currentEvent.context;
   document.getElementById("event-text").innerText    = currentEvent.text;
-
-  const choicesEl = document.getElementById("choices");
-  choicesEl.innerHTML = "";
-  currentEvent.choices.forEach((choice, i) => {
-    const btn      = document.createElement("button");
-    btn.innerText  = choice.text;
-    btn.onclick    = () => choose(i);
-    choicesEl.appendChild(btn);
-  });
-
+  setBgForEvent(currentEvent.id);
+  renderChoices(currentEvent.choices);
   updateStats();
   applySanityEffects();
 }
 
 // ── CHOOSE ────────────────────────────────────────────────────
-
 window.choose = function(index) {
   if (gameOver) return;
+  const choice  = currentEvent.choices[index];
+  const eventId = currentEvent.id || "";
 
-  const choice = currentEvent.choices[index];
-  document.getElementById("effect-text").innerText = choice.effect;
+  const effEl = document.getElementById("effect-text");
+  effEl.style.color = "#ff00ff";
 
-  for (const stat in choice.stats) {
-    if (stats[stat] !== undefined) {
-      stats[stat] += choice.stats[stat];
-      if (stat === "cordura" || stat === "chileno") {
-        stats[stat] = Math.max(0, Math.min(100, stats[stat]));
-      } else if (stat === "hambre" || stat === "temperatura") {
-        stats[stat] = Math.max(0, Math.min(100, stats[stat]));
-      } else if (stat === "plata") {
-        stats[stat] = Math.max(0, stats[stat]);
-      }
-    }
-  }
-
+  applyStats(choice, eventId);
   updateStats();
+
+  // Badge chilenidad especial
+  let effectMsg = choice.effect;
+  if (stats.chileno > 100) {
+    effectMsg += " ⭐ CHILENIDAD EXTREMA";
+    effEl.style.color = "#ff6600";
+  }
+  effEl.innerText = effectMsg;
+
+  if (effectTimeout) clearTimeout(effectTimeout);
+
   document.body.classList.add("shake");
   setTimeout(() => document.body.classList.remove("shake"), 200);
   document.getElementById("choices").style.pointerEvents = "none";
 
-  if (stats.cordura <= 0) {
-    setTimeout(showGameOver, 700);
-    return;
-  }
+  if (stats.cordura <= 0) { setTimeout(showGameOver, 700); return; }
 
-  // FIX PRINCIPAL: cadenas SÍ avanzan el contador
   eventsThisPhase++;
+  if (choice.nextEvent) activeChainId = choice.nextEvent;
 
-  if (choice.nextEvent) {
-    activeChainId = choice.nextEvent;
-  }
-
-  setTimeout(() => {
-    checkPhaseProgression();
-    document.getElementById("effect-text").innerText = "";
+  // Effect dura 2.5 segundos
+  effectTimeout = setTimeout(() => {
+    effEl.innerText   = "";
+    effEl.style.color = "";
     document.getElementById("choices").style.pointerEvents = "auto";
+    checkPhaseProgression();
     renderEvent();
-  }, 1000);
+  }, 2500);
 };
 
 // ── FASE ──────────────────────────────────────────────────────
-
 function advancePhase() {
   eventsThisPhase = 0;
   currentPhase++;
   if (currentPhase >= phases.length) {
     currentPhase = 0;
     currentDay++;
-    if (currentDay >= days.length) {
-      setTimeout(showWin, 500);
-    }
+    dayStartDone = false;
+    if (currentDay >= days.length) { setTimeout(showWin, 500); }
   }
 }
 
 function checkPhaseProgression() {
-  if (eventsThisPhase >= 3) {
-    advancePhase();
-  }
-}
-
-// ── STATS ─────────────────────────────────────────────────────
-
-function updateStats() {
-  document.getElementById("chileno").innerText     = stats.chileno;
-  document.getElementById("cordura").innerText     = stats.cordura;
-  document.getElementById("hambre").innerText      = stats.hambre;
-  document.getElementById("temperatura").innerText = stats.temperatura;
-  document.getElementById("plata").innerText       = stats.plata;
-}
-
-function applySanityEffects() {
-  const gameDiv   = document.getElementById("game");
-  const eventCard = document.getElementById("event-card");
-  if (!gameDiv || !eventCard) return;
-
-  gameDiv.className   = "";
-  eventCard.className = "";
-
-  if (stats.cordura <= 60 && stats.cordura > 30) {
-    gameDiv.classList.add("distorted-low");
-  } else if (stats.cordura <= 30) {
-    gameDiv.classList.add("distorted-high");
-    eventCard.classList.add("glitch-card");
-    if (Math.random() > 0.6) {
-      document.getElementById("day-phase").innerText = "¿DÓNDE ESTOY? ¿AYUDA?";
-    }
-  }
+  if (eventsThisPhase >= 3) advancePhase();
 }
 
 // ── START ─────────────────────────────────────────────────────
