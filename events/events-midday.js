@@ -1,4 +1,4 @@
-export const middayEvents = [
+const middayEvents = [
   {
     id: "md26_reunion_sorpresa",
     minCordura: 0,

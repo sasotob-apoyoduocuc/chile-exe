@@ -1,4 +1,4 @@
-export const nightEvents = [
+const nightEvents = [
   {
     id: "n71_metro_tobalaba",
     minCordura: 0,

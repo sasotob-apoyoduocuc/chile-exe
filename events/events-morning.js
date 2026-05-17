@@ -1,4 +1,4 @@
-export const morningEvents = [
+const morningEvents = [
   {
     id: "m1_micro_no_paro",
     minCordura: 0,

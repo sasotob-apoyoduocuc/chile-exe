@@ -1,4 +1,4 @@
-export const afternoonEvents = [
+const afternoonEvents = [
   {
     id: "t51_sol_tarde",
     minCordura: 40,
