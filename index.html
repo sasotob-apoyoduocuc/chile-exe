@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CHILE.EXE</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <div id="game">
+
+    <div id="topbar">
+      <div>🇨🇱 <span id="chileno">50</span></div>
+      <div>🧠 <span id="cordura">100</span></div>
+      <div>🍔 <span id="hambre">20</span></div>
+      <div>🌡 <span id="temperatura">18</span>°</div>
+    </div>
+
+    <div id="phase">
+      LUNES — MAÑANA
+    </div>
+
+    <div id="event-card">
+
+      <div id="event-image">
+        🚇
+      </div>
+
+      <div id="event-text">
+        LA MICRO NO PARÓ.
+      </div>
+
+      <div id="choices">
+        <button onclick="choose(0)">CORRER DETRÁS</button>
+        <button onclick="choose(1)">INSULTAR AL CHOFER</button>
+        <button onclick="choose(2)">LLORAR</button>
+      </div>
+
+    </div>
+
+    <div id="effect-text"></div>
+
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
