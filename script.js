@@ -1,28 +1,24 @@
-const days = [
-  "LUNES",
-  "MARTES",
-  "MIÉRCOLES",
-  "JUEVES",
-  "VIERNES"
-];
+// 1. Importaciones nativas de módulos JS desde la subcarpeta
+import { morningEvents } from './events/events-morning.js';
+import { middayEvents } from './events/events-midday.js';
+import { afternoonEvents } from './events/events-afternoon.js';
+import { nightEvents } from './events/events-night.js';
+
+// 2. Indexador de fases unificado
+const eventsData = {
+  morning: morningEvents,
+  midday: middayEvents,
+  afternoon: afternoonEvents,
+  night: nightEvents
+};
+
+const days = ["LUNES", "MARTES", "MIÉRCOLES", "JUEVES", "VIERNES"];
 
 const phases = [
-  {
-    id: "morning",
-    name: "MAÑANA"
-  },
-  {
-    id: "midday",
-    name: "MEDIODÍA"
-  },
-  {
-    id: "afternoon",
-    name: "TARDE"
-  },
-  {
-    id: "night",
-    name: "NOCHE"
-  }
+  { id: "morning", name: "MAÑANA" },
+  { id: "midday", name: "MEDIODÍA" },
+  { id: "afternoon", name: "TARDE" },
+  { id: "night", name: "NOCHE" }
 ];
 
 let stats = {
@@ -36,342 +32,161 @@ let stats = {
 let currentDay = 0;
 let currentPhase = 0;
 let eventsThisPhase = 0;
-
-const events = [
-
-  {
-    phase: "morning",
-    repeatable: true,
-
-    emoji: "🚇",
-    context: "Llevas 40 minutos esperando.",
-
-    text: "LA MICRO NO PARÓ.",
-
-    choices: [
-      {
-        text: "CORRER DETRÁS",
-        effect: "+10 CHILENIDAD",
-        stats: {
-          chileno: 10,
-          cordura: -5
-        }
-      },
-
-      {
-        text: "INSULTAR AL CHOFER",
-        effect: "CALLATE VIEJA QL",
-        stats: {
-          chileno: 20,
-          cordura: -15
-        }
-      },
-
-      {
-        text: "ACEPTAR TU DESTINO",
-        effect: "-10 CORDURA",
-        stats: {
-          cordura: -10
-        }
-      }
-    ]
-  },
-
-  {
-    phase: "morning",
-    repeatable: true,
-
-    emoji: "🌞",
-    context: "Saliste con polerón.",
-
-    text: "AHORA HACEN 34°.",
-
-    choices: [
-      {
-        text: "SEGUIR SUFRIENDO",
-        effect: "+15 CHILENIDAD",
-        stats: {
-          chileno: 15,
-          temperatura: 10
-        }
-      },
-
-      {
-        text: "ENTRAR AL MALL",
-        effect: "AIRE ACONDICIONADO GOD",
-        stats: {
-          cordura: 10
-        }
-      },
-
-      {
-        text: "SACARME TODO",
-        effect: "-20 DIGNIDAD",
-        stats: {
-          cordura: -5
-        }
-      }
-    ]
-  },
-
-  {
-    phase: "midday",
-    repeatable: true,
-
-    emoji: "🧑‍💼",
-    context: "Recién llegaste.",
-
-    text: "EL JEFE QUIERE HABLAR.",
-
-    choices: [
-      {
-        text: "SONREÍR",
-        effect: "DOLOR INTERNO",
-        stats: {
-          cordura: -10
-        }
-      },
-
-      {
-        text: "HACERME EL WEON",
-        effect: "+15 CHILENIDAD",
-        stats: {
-          chileno: 15
-        }
-      },
-
-      {
-        text: "RENUNCIAR MENTALMENTE",
-        effect: "MODO AUTOMÁTICO",
-        stats: {
-          cordura: -15
-        }
-      }
-    ]
-  },
-
-  {
-    phase: "midday",
-    repeatable: true,
-
-    emoji: "🍔",
-    context: "No llevaste almuerzo.",
-
-    text: "EL CASINO SE VE PELIGROSO.",
-
-    choices: [
-      {
-        text: "COMER IGUAL",
-        effect: "RIESGO TOMADO",
-        stats: {
-          hambre: -20,
-          cordura: -5
-        }
-      },
-
-      {
-        text: "SALTARME EL ALMUERZO",
-        effect: "+30 HAMBRE",
-        stats: {
-          hambre: 30
-        }
-      },
-
-      {
-        text: "ARRIESGARME CON LA MAYONESA",
-        effect: "DIOS NOS ABANDONÓ",
-        stats: {
-          cordura: -20
-        }
-      }
-    ]
-  },
-
-  {
-    phase: "afternoon",
-    repeatable: false,
-
-    emoji: "🌞",
-    context: "Dormiste poco.",
-
-    text: "EL SOL TE ESTÁ MIRANDO.",
-
-    choices: [
-      {
-        text: "IGNORARLO",
-        effect: "NO FUNCIONÓ",
-        stats: {
-          cordura: -15
-        }
-      },
-
-      {
-        text: "SALUDAR",
-        effect: "EL SOL SONRIÓ",
-        stats: {
-          cordura: -20
-        }
-      },
-
-      {
-        text: "PEDIR PERDÓN",
-        effect: "+10 SUPERVIVENCIA",
-        stats: {
-          chileno: 5
-        }
-      }
-    ]
-  },
-
-  {
-    phase: "night",
-    repeatable: true,
-
-    emoji: "🚉",
-    context: "Terminó la pega.",
-
-    text: "EL METRO ESTÁ COLAPSADO.",
-
-    choices: [
-      {
-        text: "METERME IGUAL",
-        effect: "+20 CHILENIDAD",
-        stats: {
-          chileno: 20,
-          cordura: -15
-        }
-      },
-
-      {
-        text: "CAMINAR",
-        effect: "PIERNAS DE ACERO",
-        stats: {
-          cordura: 5
-        }
-      },
-
-      {
-        text: "PEDIR UBER Y LLORAR",
-        effect: "-25 PLATA",
-        stats: {
-          plata: -25
-        }
-      }
-    ]
-  }
-
-];
-
 let currentEvent = null;
+let activeChainEventId = null; 
+let lastEventId = null; 
 
 function getRandomEvent() {
-
   const phaseId = phases[currentPhase].id;
+  const phaseEvents = eventsData[phaseId] || [];
 
-  const filtered = events.filter(
-    event => event.phase === phaseId
-  );
+  // Buscar si hay un evento encadenado cruzando de manera global
+  if (activeChainEventId) {
+    let chainEvent = null;
+    for (let phase in eventsData) {
+      const found = eventsData[phase].find(e => e.id === activeChainEventId);
+      if (found) { chainEvent = found; break; }
+    }
+    activeChainEventId = null; 
+    return chainEvent;
+  }
 
-  return filtered[
-    Math.floor(Math.random() * filtered.length)
-  ];
+  // Filtrar eventos base (que no requieran ser encadenados)
+  let filtered = phaseEvents.filter(event => !event.isChain);
+
+  // Filtrar según el rango de cordura actual del jugador
+  filtered = filtered.filter(event => {
+    const minC = event.minCordura !== undefined ? event.minCordura : 0;
+    const maxC = event.maxCordura !== undefined ? event.maxCordura : 100;
+    return stats.cordura >= minC && stats.cordura <= maxC;
+  });
+
+  // Evitar repetir exactamente el mismo evento previo si hay más opciones disponibles
+  if (filtered.length > 1 && lastEventId) {
+    filtered = filtered.filter(event => event.id !== lastEventId);
+  }
+
+  const selected = filtered[Math.floor(Math.random() * filtered.length)];
+  lastEventId = selected ? selected.id : null;
+  return selected;
 }
 
 function renderEvent() {
-
   currentEvent = getRandomEvent();
 
-  document.getElementById("day-phase").innerText =
+  // Si por el filtro de cordura no hay ningún evento que calce, forzamos salto de fase
+  if (!currentEvent) {
+    eventsThisPhase = 3; 
+    checkPhaseProgression();
+    renderEvent();
+    return;
+  }
+
+  document.getElementById("day-phase").innerText = 
     `${days[currentDay]} — ${phases[currentPhase].name}`;
+  document.getElementById("event-image").innerText = currentEvent.emoji;
+  document.getElementById("event-context").innerText = currentEvent.context;
+  document.getElementById("event-text").innerText = currentEvent.text;
 
-  document.getElementById("event-image").innerText =
-    currentEvent.emoji;
+  const choicesContainer = document.getElementById("choices");
+  choicesContainer.innerHTML = ""; 
 
-  document.getElementById("event-context").innerText =
-    currentEvent.context;
-
-  document.getElementById("event-text").innerText =
-    currentEvent.text;
-
-  const buttons =
-    document.querySelectorAll("#choices button");
-
+  // Generamos los botones dinámicamente según las opciones reales del evento
   currentEvent.choices.forEach((choice, index) => {
-    buttons[index].innerText = choice.text;
+    const btn = document.createElement("button");
+    btn.innerText = choice.text;
+    btn.onclick = () => choose(index);
+    choicesContainer.appendChild(btn);
   });
 
   updateStats();
+  applySanityEffects(); 
 }
 
-function choose(index) {
-
+// Vinculamos al objeto window para mantener compatibilidad si hay llamadas inline
+window.choose = function(index) {
   const choice = currentEvent.choices[index];
-
-  document.getElementById("effect-text").innerText =
-    choice.effect;
+  document.getElementById("effect-text").innerText = choice.effect;
 
   for (let stat in choice.stats) {
-
     if (stats[stat] !== undefined) {
       stats[stat] += choice.stats[stat];
+      // Clamping para que no rompa rangos de 0 a 100 (excepto plata y temperatura)
+      if (stat !== "temperatura" && stat !== "plata") {
+        stats[stat] = Math.max(0, Math.min(100, stats[stat])); 
+      }
     }
   }
 
   updateStats();
 
   document.body.classList.add("shake");
+  setTimeout(() => document.body.classList.remove("shake"), 200);
+
+  if (choice.nextEvent) {
+    activeChainEventId = choice.nextEvent;
+  } else {
+    eventsThisPhase++;
+  }
+
+  // Bloqueo temporal para evitar doble clicks ansiosos del jugador
+  document.getElementById("choices").style.pointerEvents = "none";
 
   setTimeout(() => {
-    document.body.classList.remove("shake");
-  }, 200);
+    checkPhaseProgression();
+    renderEvent();
+    document.getElementById("effect-text").innerText = "";
+    document.getElementById("choices").style.pointerEvents = "auto";
+  }, 1100);
+}
 
-  eventsThisPhase++;
+function checkPhaseProgression() {
+  if (activeChainEventId) return;
 
   if (eventsThisPhase >= 3) {
-
     eventsThisPhase = 0;
-
     currentPhase++;
 
     if (currentPhase >= phases.length) {
-
       currentPhase = 0;
       currentDay++;
 
       if (currentDay >= days.length) {
-
-        alert("SOBREVIVISTE CHILE.EXE");
-
+        alert("🎉 INCREÍBLE: Sobreviviste una semana laboral en CHILE.EXE.");
         currentDay = 0;
+        stats.cordura = 100; 
       }
     }
   }
-
-  setTimeout(() => {
-
-    renderEvent();
-
-    document.getElementById("effect-text").innerText = "";
-
-  }, 800);
 }
 
 function updateStats() {
-
-  document.getElementById("chileno").innerText =
-    stats.chileno;
-
-  document.getElementById("cordura").innerText =
-    stats.cordura;
-
-  document.getElementById("hambre").innerText =
-    stats.hambre;
-
-  document.getElementById("temperatura").innerText =
-    stats.temperatura;
-
-  document.getElementById("plata").innerText =
-    stats.plata;
+  document.getElementById("chileno").innerText = stats.chileno;
+  document.getElementById("cordura").innerText = stats.cordura;
+  document.getElementById("hambre").innerText = stats.hambre;
+  document.getElementById("temperatura").innerText = stats.temperatura;
+  document.getElementById("plata").innerText = stats.plata;
 }
 
+function applySanityEffects() {
+  const gameDiv = document.getElementById("game");
+  const eventCard = document.getElementById("event-card");
+  
+  if (!gameDiv || !eventCard) return;
+
+  gameDiv.className = "";
+  eventCard.className = "";
+
+  if (stats.cordura <= 60 && stats.cordura > 30) {
+    gameDiv.classList.add("distorted-low");
+  } else if (stats.cordura <= 30) {
+    gameDiv.classList.add("distorted-high");
+    eventCard.classList.add("glitch-card");
+    if (Math.random() > 0.6) {
+      document.getElementById("day-phase").innerText = "¿DÓNDE ESTOY? ¿AYUDA?";
+    }
+  }
+}
+
+// Lanzamos el bucle por primera vez
 renderEvent();
