@@ -403,6 +403,7 @@ window.choose = function(index) {
     effEl.style.color = "#ff6600";
   }
   effEl.innerText = effectMsg;
+  effEl.classList.add('visible');
 
   if (effectTimeout) clearTimeout(effectTimeout);
 
@@ -419,6 +420,7 @@ window.choose = function(index) {
   effectTimeout = setTimeout(() => {
     effEl.innerText   = "";
     effEl.style.color = "";
+    effEl.classList.remove('visible');
     document.getElementById("choices").style.pointerEvents = "auto";
     checkPhaseProgression();
     renderEvent();
