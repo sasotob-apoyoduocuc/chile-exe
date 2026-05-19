@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
   <title>CHILE.EXE</title>
   <link rel="stylesheet" href="style.css"/>
 </head>
@@ -18,25 +18,21 @@
     </div>
 
     <div id="card-warning" style="display:none"></div>
-
     <div id="day-phase">LUNES — MAÑANA</div>
 
     <div id="event-card">
-
-      <!-- Personaje visual novel — esquina inferior izquierda -->
-      <img id="player" src="assets/player-normal.png" alt="player" class="state-normal"/>
-
-      <!-- Zona de texto inferior -->
+      <!-- Fondo vía CSS ::after -->
+      <!-- Personaje encima del fondo -->
+      <img id="player" src="assets/player-normal.png" alt="" class="state-normal"/>
+      <!-- Caja de texto VN abajo -->
       <div id="event-text-zone">
-        <div id="event-image">🚇</div>
-        <div id="event-context">Cargando contexto...</div>
-        <div id="event-text">Cargando evento...</div>
+        <div id="event-image"></div>
+        <div id="event-context">Cargando...</div>
+        <div id="event-text">...</div>
       </div>
-
     </div>
 
     <div id="choices"></div>
-
     <div id="effect-text"></div>
 
   </div>
