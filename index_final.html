@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
+  <title>CHILE.EXE</title>
+  <link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+  <div id="game">
+
+    <!-- Stats como papelitos -->
+    <div id="topbar">
+      <div>🇨🇱 <span id="chileno">50</span></div>
+      <div>🧠 <span id="cordura">100</span></div>
+      <div>🍔 <span id="hambre">20</span></div>
+      <div>🌡 <span id="temperatura">18</span>°</div>
+      <div>💸 <span id="plata">$15.000</span></div>
+    </div>
+
+    <!-- Advertencia tarjeta -->
+    <div id="card-warning" style="display:none"></div>
+
+    <!-- Día y fase -->
+    <div id="day-phase">LUNES — MAÑANA</div>
+
+    <!-- Personaje encima del fondo -->
+    <img id="player" src="assets/player-normal.png" alt="" class="state-normal"/>
+
+    <!-- Caja de texto VN -->
+    <div id="event-card">
+      <div id="event-text-zone">
+        <div id="event-image"></div>
+        <div id="event-context">Cargando...</div>
+        <div id="event-text">...</div>
+      </div>
+    </div>
+
+    <!-- Opciones como papeles -->
+    <div id="choices"></div>
+
+    <!-- Effect text al centro -->
+    <div id="effect-text"></div>
+
+  </div>
+
+  <script src="events/events-morning.js"></script>
+  <script src="events/events-midday.js"></script>
+  <script src="events/events-afternoon.js"></script>
+  <script src="events/events-night.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
